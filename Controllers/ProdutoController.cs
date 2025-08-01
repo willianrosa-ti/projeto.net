@@ -9,7 +9,7 @@ namespace PrimeiraApi.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var produtos = new[] { "Carro", "Moto", "Bicicleta" };
+            var produtos = new[] { "Carro", "Moto", "Bicicleta", "Camimnhão" };
             return Ok(produtos);
         }
     }
