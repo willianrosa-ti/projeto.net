@@ -14,7 +14,9 @@ namespace PrimeiraApi.Context
 
         public DbSet<Usuario> Usuarios { get; set; }
 
-       public DbSet<Anuncio> Anuncios { get; set; }
+        public DbSet<Anuncio> Anuncios { get; set; }
+       
+       public DbSet<Patrocinio> Patrocinios { get; set; }
     }
 }
 

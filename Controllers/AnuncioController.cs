@@ -19,6 +19,31 @@
                 _context = context;
             }
 
+            // GET: api/Anuncio
+            [HttpGet]
+            public async Task<ActionResult<IEnumerable<Anuncio>>> GetAnuncios()
+            {
+                var anuncios = await _context.Anuncios
+                                             .Include(a => a.Usuario)
+                                             .ToListAsync();
+                
+                return Ok(anuncios);
+            }
+
+            // GET: api/Anuncio/buscar/5
+            [HttpGet("buscar/{id}")]
+            public async Task<ActionResult<Anuncio>> GetAnuncio(int id)
+            {
+                var anuncio = await _context.Anuncios.Include(a => a.Usuario).FirstOrDefaultAsync(a => a.Id == id);
+
+                if (anuncio == null)
+                {
+                    return NotFound();
+                }
+
+                return anuncio;
+            }
+
             // POST: api/Anuncio/cadastrar
             [HttpPost("cadastrar")]
             public async Task<ActionResult<Anuncio>> PostAnuncio(AnuncioDto anuncioDto)
@@ -40,24 +65,45 @@
                 _context.Anuncios.Add(anuncio);
                 await _context.SaveChangesAsync();
 
-                // Inclui a informação do usuário na resposta para que o Swagger retorne o objeto completo
                 anuncio.Usuario = usuario;
 
                 return CreatedAtAction(nameof(GetAnuncio), new { id = anuncio.Id }, anuncio);
             }
-
-            // GET: api/Anuncio/buscar/5
-            [HttpGet("buscar/{id}")]
-            public async Task<ActionResult<Anuncio>> GetAnuncio(int id)
+            
+            // PUT: api/Anuncio/editar/5
+            [HttpPut("editar/{id}")]
+            public async Task<IActionResult> PutAnuncio(int id, AnuncioDto anuncioDto)
             {
-                var anuncio = await _context.Anuncios.Include(a => a.Usuario).FirstOrDefaultAsync(a => a.Id == id);
-
+                var anuncio = await _context.Anuncios.FindAsync(id);
                 if (anuncio == null)
                 {
-                    return NotFound();
+                    return NotFound(new { message = "Anúncio não encontrado." });
                 }
 
-                return anuncio;
+                // Atualiza as propriedades do anúncio existente com os dados do DTO
+                anuncio.Titulo = anuncioDto.Titulo;
+                anuncio.Descricao = anuncioDto.Descricao;
+                anuncio.Preco = anuncioDto.Preco;
+                
+                await _context.SaveChangesAsync();
+                
+                return NoContent();
+            }
+
+            // DELETE: api/Anuncio/deletar/5
+            [HttpDelete("deletar/{id}")]
+            public async Task<IActionResult> DeleteAnuncio(int id)
+            {
+                var anuncio = await _context.Anuncios.FindAsync(id);
+                if (anuncio == null)
+                {
+                    return NotFound(new { message = "Anúncio não encontrado." });
+                }
+
+                _context.Anuncios.Remove(anuncio);
+                await _context.SaveChangesAsync();
+
+                return NoContent();
             }
         }
     }
