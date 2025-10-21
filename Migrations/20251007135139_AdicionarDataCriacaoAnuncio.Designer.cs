@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrimeiraApi.Context;
 
@@ -11,9 +12,11 @@ using PrimeiraApi.Context;
 namespace PrimeiraApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251007135139_AdicionarDataCriacaoAnuncio")]
+    partial class AdicionarDataCriacaoAnuncio
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -55,72 +58,6 @@ namespace PrimeiraApi.Migrations
                     b.ToTable("Anuncios");
                 });
 
-            modelBuilder.Entity("PrimeiraApi.Models.Conexao", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime?>("DataConfirmacao")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DataSolicitacao")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("SolicitadoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SolicitanteId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SolicitadoId");
-
-                    b.HasIndex("SolicitanteId");
-
-                    b.ToTable("Conexoes");
-                });
-
-            modelBuilder.Entity("PrimeiraApi.Models.Mensagem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Conteudo")
-                        .IsRequired()
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
-
-                    b.Property<DateTime>("DataEnvio")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("DestinatarioId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Lido")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("RemetenteId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DestinatarioId");
-
-                    b.HasIndex("RemetenteId");
-
-                    b.ToTable("Mensagens");
-                });
-
             modelBuilder.Entity("PrimeiraApi.Models.Patrocinio", b =>
                 {
                     b.Property<int>("Id")
@@ -157,7 +94,7 @@ namespace PrimeiraApi.Migrations
                     b.ToTable("Patrocinios");
                 });
 
-            modelBuilder.Entity("PrimeiraApi.Models.SolicitacaoMensagem", b =>
+            modelBuilder.Entity("PrimeiraApi.Models.Produto", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -165,25 +102,13 @@ namespace PrimeiraApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("DataSolicitacao")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("SolicitadoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SolicitanteId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SolicitadoId");
-
-                    b.HasIndex("SolicitanteId");
-
-                    b.ToTable("SolicitacoesMensagem");
+                    b.ToTable("Produtos");
                 });
 
             modelBuilder.Entity("PrimeiraApi.Models.Usuario", b =>
@@ -208,10 +133,6 @@ namespace PrimeiraApi.Migrations
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
-
-                    b.Property<string>("FotoUrl")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Login")
                         .IsRequired()
@@ -244,44 +165,6 @@ namespace PrimeiraApi.Migrations
                     b.Navigation("Usuario");
                 });
 
-            modelBuilder.Entity("PrimeiraApi.Models.Conexao", b =>
-                {
-                    b.HasOne("PrimeiraApi.Models.Usuario", "Solicitado")
-                        .WithMany()
-                        .HasForeignKey("SolicitadoId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrimeiraApi.Models.Usuario", "Solicitante")
-                        .WithMany()
-                        .HasForeignKey("SolicitanteId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Solicitado");
-
-                    b.Navigation("Solicitante");
-                });
-
-            modelBuilder.Entity("PrimeiraApi.Models.Mensagem", b =>
-                {
-                    b.HasOne("PrimeiraApi.Models.Usuario", "Destinatario")
-                        .WithMany()
-                        .HasForeignKey("DestinatarioId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrimeiraApi.Models.Usuario", "Remetente")
-                        .WithMany()
-                        .HasForeignKey("RemetenteId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Destinatario");
-
-                    b.Navigation("Remetente");
-                });
-
             modelBuilder.Entity("PrimeiraApi.Models.Patrocinio", b =>
                 {
                     b.HasOne("PrimeiraApi.Models.Usuario", "Usuario")
@@ -291,25 +174,6 @@ namespace PrimeiraApi.Migrations
                         .IsRequired();
 
                     b.Navigation("Usuario");
-                });
-
-            modelBuilder.Entity("PrimeiraApi.Models.SolicitacaoMensagem", b =>
-                {
-                    b.HasOne("PrimeiraApi.Models.Usuario", "Solicitado")
-                        .WithMany()
-                        .HasForeignKey("SolicitadoId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrimeiraApi.Models.Usuario", "Solicitante")
-                        .WithMany()
-                        .HasForeignKey("SolicitanteId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Solicitado");
-
-                    b.Navigation("Solicitante");
                 });
 #pragma warning restore 612, 618
         }

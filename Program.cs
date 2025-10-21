@@ -3,6 +3,17 @@ using PrimeiraApi.Context;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Adicionar o Serviço CORS (NOVO)
+builder.Services.AddCors(options =>
+{
+    // Define uma política chamada "AllowAll" que é segura para ambientes de desenvolvimento local.
+    options.AddPolicy("AllowAll",
+        builder => builder.AllowAnyOrigin() // Permite qualquer origem (seu HTML local)
+                          .AllowAnyHeader()   // Permite qualquer tipo de cabeçalho
+                          .AllowAnyMethod());  // Permite qualquer método (POST, GET, etc.)
+});
+// ------------------------------------
+
 // Add services to the container.
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -24,6 +35,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Use a política CORS (NOVO)
+app.UseCors("AllowAll"); 
+// ------------------------------------
 
 app.UseAuthorization();
 

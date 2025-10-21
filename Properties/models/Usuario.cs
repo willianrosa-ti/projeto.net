@@ -29,5 +29,8 @@ namespace PrimeiraApi.Models
 
         [StringLength(15)] // Para o número de celular
         public required string Celular { get; set; }
+
+        [StringLength(500)] 
+        public string? FotoUrl { get; set; } 
     }
 }
