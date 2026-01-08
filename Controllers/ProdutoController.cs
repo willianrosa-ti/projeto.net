@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
+
 namespace PrimeiraApi.Controllers
 {
     [ApiController]
@@ -9,8 +10,12 @@ namespace PrimeiraApi.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var produtos = new[] { "Carro", "Moto", "Bicicleta", "Camimnhão" };
+            var produtos = new[] { "Carro", "Moto", "Bicicleta", "Caminhão", "Barco", "Lancha" };
             return Ok(produtos);
         }
     }
 }
+
+
+
+
